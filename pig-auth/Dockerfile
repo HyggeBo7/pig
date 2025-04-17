@@ -1,6 +1,4 @@
-FROM moxm/java:1.8-full
-
-RUN mkdir -p /pig-auth
+FROM registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/java:1.8-full
 
 WORKDIR /pig-auth
 

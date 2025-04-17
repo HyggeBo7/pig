@@ -16,8 +16,10 @@
 
 package com.pig4cloud.pig.common.security.component;
 
+import cn.hutool.core.util.StrUtil;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.security.annotation.Inner;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +29,6 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lengleng
@@ -52,7 +52,7 @@ public class PigSecurityInnerAspect implements Ordered {
 			inner = AnnotationUtils.findAnnotation(clazz, Inner.class);
 		}
 		String header = request.getHeader(SecurityConstants.FROM);
-		if (inner.value() && !SecurityConstants.FROM_IN.equals(header)) {
+		if (inner.value() && !StrUtil.equals(SecurityConstants.FROM_IN, header)) {
 			log.warn("访问接口 {} 没有权限", point.getSignature().getName());
 			throw new AccessDeniedException("Access is denied");
 		}

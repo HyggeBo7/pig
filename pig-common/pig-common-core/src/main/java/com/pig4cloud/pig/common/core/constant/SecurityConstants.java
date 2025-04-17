@@ -48,11 +48,6 @@ public interface SecurityConstants {
 	String FROM = "from";
 
 	/**
-	 * 请求header
-	 */
-	String HEADER_FROM_IN = FROM + "=" + FROM_IN;
-
-	/**
 	 * 默认登录URL
 	 */
 	String OAUTH_TOKEN_URL = "/oauth2/token";
@@ -63,9 +58,14 @@ public interface SecurityConstants {
 	String REFRESH_TOKEN = "refresh_token";
 
 	/**
+	 * password 模式
+	 */
+	String PASSWORD = "password";
+
+	/**
 	 * 手机号登录
 	 */
-	String APP = "app";
+	String MOBILE = "mobile";
 
 	/**
 	 * {bcrypt} 加密的特征码
@@ -77,11 +77,6 @@ public interface SecurityConstants {
 	 */
 	String NOOP = "{noop}";
 
-	/***
-	 * 资源服务器默认bean名称
-	 */
-	String RESOURCE_SERVER_CONFIGURER = "resourceServerConfigurerAdapter";
-
 	/**
 	 * 用户名
 	 */
@@ -91,6 +86,11 @@ public interface SecurityConstants {
 	 * 用户信息
 	 */
 	String DETAILS_USER = "user_info";
+
+	/**
+	 * 用户ID
+	 */
+	String DETAILS_USER_ID = "user_id";
 
 	/**
 	 * 协议字段
@@ -120,7 +120,7 @@ public interface SecurityConstants {
 	/**
 	 * 短信登录 参数名称
 	 */
-	String SMS_PARAMETER_NAME = "phone";
+	String SMS_PARAMETER_NAME = "mobile";
 
 	/**
 	 * 授权码模式confirm

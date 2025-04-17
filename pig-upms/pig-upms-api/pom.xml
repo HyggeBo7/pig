@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.pig4cloud</groupId>
         <artifactId>pig-upms</artifactId>
-        <version>3.6.7</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>pig-upms-api</artifactId>
@@ -36,16 +36,10 @@
             <groupId>com.pig4cloud</groupId>
             <artifactId>pig-common-core</artifactId>
         </dependency>
-        <!--swagger-->
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
         <!--feign 注解依赖-->
         <dependency>
             <groupId>com.pig4cloud</groupId>
             <artifactId>pig-common-feign</artifactId>
-            <optional>true</optional>
         </dependency>
         <!--mybatis 依赖-->
         <dependency>

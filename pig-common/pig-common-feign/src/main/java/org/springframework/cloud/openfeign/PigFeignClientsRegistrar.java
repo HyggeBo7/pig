@@ -48,6 +48,8 @@ import java.util.Map;
  */
 public class PigFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware, EnvironmentAware {
 
+	private final static String BASE_URL = "http://127.0.0.1:${server.port}${server.servlet.context-path}";
+
 	@Getter
 	private ClassLoader beanClassLoader;
 
@@ -83,16 +85,20 @@ public class PigFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, 
 				if (attributes == null) {
 					continue;
 				}
+
+				// 如果是单体项目自动注入 & url 为空
+				Boolean isMicro = environment.getProperty("spring.cloud.nacos.discovery.enabled", Boolean.class, true);
 				// 如果已经存在该 bean，支持原生的 Feign
-				if (registry.containsBeanDefinition(className)) {
+				if (registry.containsBeanDefinition(className) && isMicro) {
 					continue;
 				}
+
 				registerClientConfiguration(registry, getClientName(attributes), attributes.get("configuration"));
 
 				validate(attributes);
 				BeanDefinitionBuilder definition = BeanDefinitionBuilder
 					.genericBeanDefinition(FeignClientFactoryBean.class);
-				definition.addPropertyValue("url", getUrl(attributes));
+				definition.addPropertyValue("url", getUrl(registry, attributes));
 				definition.addPropertyValue("path", getPath(attributes));
 				String name = getName(attributes);
 				definition.addPropertyValue("name", name);
@@ -185,8 +191,17 @@ public class PigFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, 
 		return value;
 	}
 
-	private String getUrl(Map<String, Object> attributes) {
-		String url = resolve((String) attributes.get("url"));
+	private String getUrl(BeanDefinitionRegistry registry, Map<String, Object> attributes) {
+
+		// 如果是单体项目自动注入 & url 为空
+		Boolean isMicro = environment.getProperty("spring.cloud.nacos.discovery.enabled", Boolean.class, true);
+
+		if (isMicro) {
+			return null;
+		}
+
+		String url = resolve(BASE_URL);
+
 		return FeignClientsRegistrar.getUrl(url);
 	}
 

@@ -22,27 +22,30 @@
     <groupId>com.pig4cloud</groupId>
     <artifactId>pig</artifactId>
     <name>${project.artifactId}</name>
-    <version>3.6.7</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <url>https://www.pig4cloud.com</url>
 
     <properties>
-        <spring-boot.version>2.7.12</spring-boot.version>
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <!-- 项目版本号 -->
+        <revision>3.8.1-JDK8</revision>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.6.1</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
-        <spring.authorization.version>0.4.2</spring.authorization.version>
-        <dynamic-ds.version>3.6.0</dynamic-ds.version>
-        <captcha.version>2.2.2</captcha.version>
+        <spring-boot-admin.version>2.7.15</spring-boot-admin.version>
+        <spring.authorization.version>0.4.5</spring.authorization.version>
+        <captcha.version>2.2.3</captcha.version>
+        <screw.version>0.0.1</screw.version>
+        <lombok.version>1.18.30</lombok.version>
         <velocity.version>2.3</velocity.version>
         <velocity.tool.version>3.1</velocity.tool.version>
         <configuration.version>1.10</configuration.version>
         <jasypt.version>3.0.5</jasypt.version>
-        <swagger.fox.version>3.0.0</swagger.fox.version>
-        <knife4j.ui.version>3.0.3</knife4j.ui.version>
+        <knife4j.version>3.0.5</knife4j.version>
+        <springdoc.version>1.6.9</springdoc.version>
         <xxl-job.version>2.4.0</xxl-job.version>
         <docker.plugin.version>0.32.0</docker.plugin.version>
         <docker.host>http://192.168.0.100:2375</docker.host>
@@ -51,7 +54,8 @@
         <docker.username>username</docker.username>
         <docker.password>password</docker.password>
         <git.commit.plugin>4.9.9</git.commit.plugin>
-        <spring.checkstyle.plugin>0.0.38</spring.checkstyle.plugin>
+        <spring.checkstyle.plugin>0.0.39</spring.checkstyle.plugin>
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     </properties>
 
     <!-- 以下依赖 全局所有的模块都会引入  -->
@@ -83,6 +87,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <!--测试依赖-->
@@ -197,6 +202,32 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- 统一 revision 版本 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--打包jar 与git commit 关联插件-->
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
@@ -236,7 +267,7 @@
 
     <profiles>
         <profile>
-            <id>dev</id>
+            <id>cloud</id>
             <properties>
                 <!-- 环境标识，需要与配置文件的名称相对应 -->
                 <profiles.active>dev</profiles.active>
@@ -247,6 +278,12 @@
                 <!-- 默认环境 -->
                 <activeByDefault>true</activeByDefault>
             </activation>
+        </profile>
+        <profile>
+            <id>boot</id>
+            <modules>
+                <module>pig-boot</module>
+            </modules>
         </profile>
     </profiles>
 </project>

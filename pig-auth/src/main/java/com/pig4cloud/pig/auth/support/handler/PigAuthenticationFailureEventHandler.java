@@ -19,11 +19,8 @@ package com.pig4cloud.pig.auth.support.handler;
 import cn.hutool.core.util.StrUtil;
 import com.pig4cloud.pig.admin.api.entity.SysLog;
 import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
-import com.pig4cloud.pig.common.core.util.MsgUtils;
 import com.pig4cloud.pig.common.core.util.R;
 import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.core.util.WebUtils;
 import com.pig4cloud.pig.common.log.event.SysLogEvent;
 import com.pig4cloud.pig.common.log.util.LogTypeEnum;
 import com.pig4cloud.pig.common.log.util.SysLogUtils;
@@ -67,7 +64,7 @@ public class PigAuthenticationFailureEventHandler implements AuthenticationFailu
 		log.info("用户：{} 登录失败，异常：{}", username, exception.getLocalizedMessage());
 		SysLog logVo = SysLogUtils.getSysLog();
 		logVo.setTitle("登录失败");
-		logVo.setType(LogTypeEnum.ERROR.getType());
+		logVo.setLogType(LogTypeEnum.ERROR.getType());
 		logVo.setException(exception.getLocalizedMessage());
 		// 发送异步日志事件
 		String startTimeStr = request.getHeader(CommonConstants.REQUEST_START_TIME);
@@ -76,10 +73,7 @@ public class PigAuthenticationFailureEventHandler implements AuthenticationFailu
 			Long endTime = System.currentTimeMillis();
 			logVo.setTime(endTime - startTime);
 		}
-
-		logVo.setServiceId(WebUtils.getClientId());
 		logVo.setCreateBy(username);
-		logVo.setUpdateBy(username);
 		SpringContextHolder.publishEvent(new SysLogEvent(logVo));
 		// 写出错误信息
 		sendErrorResponse(request, response, exception);
@@ -99,12 +93,6 @@ public class PigAuthenticationFailureEventHandler implements AuthenticationFailu
 		}
 		else {
 			errorMessage = exception.getLocalizedMessage();
-		}
-
-		// 手机号登录
-		String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
-		if (SecurityConstants.APP.equals(grantType)) {
-			errorMessage = MsgUtils.getSecurityMessage("AbstractUserDetailsAuthenticationProvider.smsBadCredentials");
 		}
 
 		this.errorHttpResponseConverter.write(R.failed(errorMessage), MediaType.APPLICATION_JSON, httpResponse);

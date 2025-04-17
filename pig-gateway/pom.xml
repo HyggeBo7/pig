@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.pig4cloud</groupId>
         <artifactId>pig</artifactId>
-        <version>3.6.7</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>pig-gateway</artifactId>
@@ -91,6 +91,12 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
+        </dependency>
+        <!--引入Knife4j的官方ui包-->
+        <dependency>
+            <groupId>io.springboot</groupId>
+            <artifactId>knife4j-openapi3-ui</artifactId>
+            <version>${knife4j.version}</version>
         </dependency>
     </dependencies>
 
